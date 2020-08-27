@@ -13,9 +13,14 @@ class Cell(Canvas):
 		self.piece = 'none' # none, white, red
 		self.isKing = False # True, False
 
+		self.length = 50
+		self.radius = 4/5*self.length/2
+
 		self.circle=self.create_oval(self.length/2-self.radius,self.length/2-self.radius,\
                          self.length/2+self.radius, self.length/2+self.radius,\
-                         outline=ncolor,fill=ncolor)
+                         outline=self.color,fill=self.color)
+
+		self.bind("<Button-1>", lambda event : print(self.coord))
 
 	def change_piece(self, to_color):
 		self.piece = to_color
@@ -47,9 +52,11 @@ class Board(Frame):
 					self.cells.append(Cell(self, 'dark green', (i, j)))
 				self.cells[f(i, j)].grid(row=i, column=j)
 
-		for i in [f(6, 1), f(5, 0), f(5, 2), f(7, 2), f(6, 3), f(7, 4), f(5, 4), f(6, 5), f(7, 6), f(5, 6), f(6, 7)]:
+		for i in [f(6, 1), f(5, 0), f(5, 2), f(7, 2), f(6, 3), f(7, 4), f(5, 4), f(6, 5), f(7, 6), f(5, 6), f(6, 7), f(7, 0)]:
 			self.cells[i].change_piece('red')
 
+		for i in [f(1, 0), f(0, 1), f(2, 1), f(1, 2), f(0, 3), f(2, 3), f(1, 4), f(0, 5), f(2, 5), f(1, 6), f(0, 7), f(2, 7)]:
+			self.cells[i].change_piece('white')
 
 
 def play_checkers():
@@ -59,5 +66,3 @@ def play_checkers():
 	root.mainloop()
 
 play_checkers()
-
-for i in [f(6, 1), f(5, 0), f(5, 2), f(7, 2), f(6, 3), f(7, 4), f(5, 4), f(6, 5), f(7, 6), f(5, 6), f(6, 7)]
