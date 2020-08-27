@@ -2,6 +2,8 @@ from tkinter import *
 
 f = lambda i, j : i*8 + j
 
+last_clicked = [None, False] # last clicked cell, whether there is a cell
+
 class Cell(Canvas):
 
 	def __init__(self, master, color, coord):
@@ -20,7 +22,9 @@ class Cell(Canvas):
                          self.length/2+self.radius, self.length/2+self.radius,\
                          outline=self.color,fill=self.color)
 
-		self.bind("<Button-1>", lambda event : print(self.coord))
+		self.bind("<Button-1>", lambda event : self.move())
+
+		self.highlighted=False
 
 	def change_piece(self, to_color):
 		self.piece = to_color
@@ -34,7 +38,34 @@ class Cell(Canvas):
 			self.itemconfig(self.circle, fill=self.piece)
 			self.itemconfig(self.circle, fill=self.piece)
 
+	def highlight(self):
+		self.highlighted=True
+		self['bg']='light green'
 
+	def unhighlight(self):
+		self.highlighted=False
+		self['bg']=self.color
+
+	def move(self):
+		global last_clicked
+
+		if self.piece!='none':
+			if self.highlighted:
+				self.unhighlight()
+				last_clicked = [None, False]
+				return
+			if last_clicked[1]: 
+				last_clicked[0].unhighlight()
+			self.highlight()
+			last_clicked = [self, True]
+		else:
+			if last_clicked[0]==None:
+				return
+			if self.master.valid_move():
+				last_clicked[0].unhighlight()
+				self.change_piece(last_clicked[0].piece)
+				last_clicked[0].change_piece('none')
+				last_clicked = [None, False]
 
 class Board(Frame):
 
@@ -57,6 +88,9 @@ class Board(Frame):
 
 		for i in [f(1, 0), f(0, 1), f(2, 1), f(1, 2), f(0, 3), f(2, 3), f(1, 4), f(0, 5), f(2, 5), f(1, 6), f(0, 7), f(2, 7)]:
 			self.cells[i].change_piece('white')
+
+	def valid_move(self):
+		return True
 
 
 def play_checkers():
