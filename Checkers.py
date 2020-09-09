@@ -61,7 +61,7 @@ class Cell(Canvas):
 		else:
 			if last_clicked[0]==None:
 				return
-			if self.master.valid_move():
+			if self.master.valid_move(last_clicked[0], self):
 				last_clicked[0].unhighlight()
 				self.change_piece(last_clicked[0].piece)
 				last_clicked[0].change_piece('none')
@@ -89,9 +89,10 @@ class Board(Frame):
 		for i in [f(1, 0), f(0, 1), f(2, 1), f(1, 2), f(0, 3), f(2, 3), f(1, 4), f(0, 5), f(2, 5), f(1, 6), f(0, 7), f(2, 7)]:
 			self.cells[i].change_piece('white')
 
-	def valid_move(self):
+	def valid_move(self, pc, nc):
+		if nc['bg']=='blanched almond':
+			return False
 		return True
-
 
 def play_checkers():
 	root = Tk()
